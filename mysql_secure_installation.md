@@ -16,3 +16,5 @@
    4.1 但是你也发现了，本地的root用户通过socket可以免密登陆，似乎很危险，虽然限制了远程root登陆，但如果攻击者并不直接远程root登陆，而是通过先登陆跳板机，跳板机是物理上的本地终端，那么就可以直接以通过socket直接登陆数据库，这是非常危险的。
    4.2 我建议修改root用户账号的认证方式为mysql_native_password，首先登陆mysql，使用命令：ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码';退出数据库，再执行 mysql -uroot，会直接报错拒绝登录；必须用 mysql -uroot -p 输入密码才可登录，socket 免密就已经失效。
 
+5. 退出。使用命令：exit即可退出数据库。
+
