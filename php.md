@@ -1,6 +1,6 @@
 # php链接nginx和数据库
 
-1. 安装php和相关的软件，yum源问题看千蚊nginx.md中有讲到,直接使用命令：yum install php php-mysql -y，启动nginx，使用命令：systemctl start nginx，启动php-fpm，使用命令：systemctl start php-fpm。
+1. 安装php和相关的软件，yum源问题看千蚊nginx.md中有讲到,直接使用命令：yum install php php-mysql -y，启动nginx，使用命令：systemctl start nginx。启动php-fpm，使用命令：systemctl start php-fpm。启动mysql，使用命令：systemctl start mysqld。
 2. 配置一个nginx关于php的转发配置文件。使用命令：vim /etc/nginx/conf.d/demo.php.conf，然后把下面内容粘贴进去
   server {
     listen 80 default_server;
@@ -17,6 +17,7 @@
 }
 然后检测语法，重载nginx，使用命令：nginx -t && nginx -s reload。
 打开/etc/php-fpm.d/www.conf，找到;isten = /run/php-fpm/www.sock，在下面加入listen = 127.0.0.1:9000  ，注意后面没有标点符号，：
+重启systemctl restart php-fpm
 然后检测语法，重载nginx，使用命令：nginx -t && nginx -s reload。
 
 3. 创建一个demo.php文件，使用命令：vim /usr/share/nginx/html/demo.php，然后把下面内容粘贴进去。
@@ -48,7 +49,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 // 关闭连接
 mysqli_close($conn);
 ?>
-4. 测试访问。使用ip/demo.php访问如果出现结果则说明成功。
+4. 测试访问。写完 demo.php 后，先在终端执行php /usr/share/nginx/html/demo.php，先确认 PHP 代码本身无语法、数据库连接问题，再通过浏览器访问，使用ip/demo.php访问如果出现结果则说明成功。
 5. 典型问题：
 200 OK（浏览器下载 PHP 源码）
 未配置 default_server、php-fpm 未监听 9000、Nginx PHP 转发配置失效
